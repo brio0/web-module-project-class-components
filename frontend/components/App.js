@@ -1,4 +1,6 @@
 import React from 'react'
+import TodoList from './TodoList'
+import Form from './Form'
 
 const todosInitial = [
   {
@@ -20,10 +22,54 @@ export default class App extends React.Component {
       todos: todosInitial
     }
   }
+
+  toggleTodos = (itemId) => {
+    this.setState({
+      todos: this.state.todos.map(item => {
+        if (itemId === item.id) {
+          return {
+            ...item,
+            completed: !item.completed
+          }
+        }
+        return item
+      })
+    })
+  }
+
+  addTodo = (itemText) => {
+    const newTodo = {
+      name: itemText,
+      id: Date.now(),
+      completed: false
+    }
+    const newTodos = [...this.state.todos, newTodo]
+    this.setState({
+      todos: newTodos
+    })
+  }
+
+  clearTodos = () => {
+    this.setState({
+      ...this.state,
+      todos: this.state.todos.filter(item => !item.completed)
+    })
+  }
+
   render() {
     return (
       <div>
         Todo App
+        <TodoList
+          todos={this.state.todos}
+          toggle={this.toggleTodos}
+        />
+        <Form
+          addTodos={this.addTodo}
+        />
+        <button onClick={this.clearTodos}>clear</button>
+
+
       </div>
     )
   }
